@@ -13,8 +13,8 @@ var err error
 func init() {
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
 
-		"root",
 		"xxxxx",
+		"xxxxxxx",
 		"127.0.0.1:xxx",
 		"xxxx")
 	fmt.Println("datasource name :-", dataSourceName)

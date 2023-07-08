@@ -3,28 +3,17 @@ package services
 import (
 	users "Book-Rental-Service/domain/Users"
 	"errors"
-	"fmt"
 )
 
-func CreateUser(user *users.UserInfo) (users.UserInfo, error) {
+func CreateUserService(reqBody map[string]interface{}) error {
 
-	valid, err := users.ValidateUser(user)
+	valid, err := users.ValidateUser(reqBody)
 	if err != nil || valid == false {
-		return users.UserInfo{}, errors.New("invalid user")
+		return errors.New("invalid user")
 	}
-	fmt.Println("Is user valid ", valid)
-	if !valid {
-		return users.UserInfo{}, errors.New("invalid user")
-	}
-
-	return *user, nil
-}
-func UpdateUser(user *users.UserInfo) error {
-
-	err := users.UpdateUser(user)
+	err = users.CreateUser(reqBody)
 	if err != nil {
-		return errors.New("unable to update user")
+		return err
 	}
-
 	return nil
 }

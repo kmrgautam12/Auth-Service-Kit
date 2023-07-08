@@ -14,9 +14,9 @@ func init() {
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
 
 		"root",
-		"Rahul@#$987",
-		"127.0.0.1:3306",
-		"UserDB")
+		"xxxxx",
+		"127.0.0.1:xxx",
+		"xxxx")
 	fmt.Println("datasource name :-", dataSourceName)
 
 	DBClient, err = sql.Open("mysql", dataSourceName)

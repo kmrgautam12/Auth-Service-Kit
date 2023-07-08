@@ -1,10 +1,18 @@
 package auth
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha256"
+	"crypto/x509"
+	"encoding/base64"
+	"encoding/pem"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -16,6 +24,23 @@ type JWTClaims struct {
 
 var jwtKey = []byte("supersecretkey")
 
+func GenerateTokenRS256(c *gin.Context) (string, error) {
+	keyGenrateKey, _ := rsa.GenerateKey(rand.Reader, 2048)
+
+	fmt.Println("key generated is ", keyGenrateKey)
+	privateKeyPem, _ := os.Create("private_key.pem")
+	_ = pem.Encode(privateKeyPem, &pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(keyGenrateKey),
+	})
+	privateKeyPem.Close()
+
+	publicKey := keyGenrateKey.PublicKey
+	rsaKey, _ := rsa.EncryptOAEP(sha256.New(), rand.Reader, &publicKey, []byte("super secret bytes"), nil)
+	rsaKeyBase64 := base64.StdEncoding.EncodeToString(rsaKey)
+	return string(rsaKeyBase64), nil
+
+}
 func GenerateToken(username string, password string) (token string, err error) {
 	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := &JWTClaims{

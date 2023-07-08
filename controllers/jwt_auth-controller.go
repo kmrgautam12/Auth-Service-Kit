@@ -19,3 +19,9 @@ func Token(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"token": token})
 
 }
+func GetTokenV2(c *gin.Context) {
+	token, _ := jwt_auth.GenerateTokenRS256(c)
+	fmt.Println("token is ", token)
+	c.JSON(200, gin.H{"token": token})
+
+}

@@ -1,7 +1,7 @@
 package main
 
-import "Book-Rental-Service/app"
+import "Pay-AI/financial-transaction-server/restrouters"
 
 func main() {
-	app.StartApplication()
+	restrouters.Handler()
 }

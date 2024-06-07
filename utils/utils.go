@@ -1,21 +1,20 @@
 package utils
 
 import (
-	"errors"
-	"io/ioutil"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 )
 
-var requestBodyMap map[string]interface{}
+func GetPing(c *gin.Context) {
+	c.JSON(200, gin.H{"status": "healthy"})
+}
 
-func GetRequestBodyMap(c *gin.Context) ([]byte, error) {
-	jsonData, err := ioutil.ReadAll(c.Request.Body)
+func MustParseUrl(u string) *url.URL {
+
+	url, err := url.Parse(u)
 	if err != nil {
-		// Handle error
-		return nil, errors.New("invalid request body")
-
+		return nil
 	}
-
-	return jsonData, nil
+	return url
 }

@@ -12,19 +12,22 @@ func Handler() {
 	r := gin.Default()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	t2 := r.Group("/v1/token")
+	{
+		t2.POST("/", authmech.GetTokenV1)
 
-	// auth := r.Group("/auth")
-	// {
-	// 	auth.Use(authmech.Middleware())
-	// }
-	t := r.Group("/v1/token")
+	}
+	t := r.Group("/v2/token")
 	{
 		t.POST("/", authmech.GenerateToken)
 
 	}
+	r.Use(authmech.Middleware())
+
 	p := r.Group("/ping")
 	{
 		p.GET("/", utils.GetPing)
 	}
+	r.Run(":8080")
 
 }

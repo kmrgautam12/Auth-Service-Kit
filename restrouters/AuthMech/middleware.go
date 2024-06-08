@@ -1,29 +1,33 @@
 package authmech
 
 import (
+	utils "Pay-AI/financial-transaction-server/Utils"
+
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 func Middleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		token := c.GetHeader("Authrization")
+		token := c.GetHeader("Authorization")
 		if token == "" {
 			c.AbortWithStatusJSON(401, gin.H{"message": "Unauthorize"})
+			return
 		}
-		jwtToken, err := jwt.ParseWithClaims(token,
-			jwt.MapClaims{}, func(t *jwt.Token) (interface{}, error) {
-				return t, nil
-			},
-		)
+		_, pub, err := ParsePublicPrivateKey()
 		if err != nil {
-			c.AbortWithStatusJSON(401, gin.H{"message": "Unauthoriza"})
+			c.AbortWithStatusJSON(401, gin.H{"message": "Unauthorize"})
+			return
 		}
-		if jwtToken.Valid {
+
+		valid := utils.VerifyRSAJWTToken(pub, token)
+		if valid {
 			c.Next()
+			return
 		}
+		c.AbortWithStatusJSON(401, gin.H{"message": "Unauthorize"})
+		return
 
 	}
 

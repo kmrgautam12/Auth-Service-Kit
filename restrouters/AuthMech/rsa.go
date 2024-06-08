@@ -63,3 +63,43 @@ func SavePublicKeyPem(publicKey *rsa.PublicKey) (bool, error) {
 	return true, nil
 
 }
+
+func RestorePrivateKey() (*rsa.PrivateKey, error) {
+	loadPrivateKey, err := os.ReadFile(constantservice.PEM_PRIVATE_PATH)
+	if err != nil {
+		return nil, err
+	}
+	p, rest := pem.Decode(loadPrivateKey)
+	fmt.Println("Rest is :", rest)
+	privateKey, err := x509.ParsePKCS1PrivateKey(p.Bytes)
+	if err != nil {
+		return nil, err
+	}
+	return privateKey, nil
+
+}
+func RestorePublicKey() (*rsa.PublicKey, error) {
+	loadPublicKey, err := os.ReadFile(constantservice.PEM_PUBLIC_PATH)
+	if err != nil {
+		return nil, err
+	}
+	p, rest := pem.Decode(loadPublicKey)
+	fmt.Println("Rest is :", rest)
+	publicKey, err := x509.ParsePKCS1PublicKey(p.Bytes)
+	if err != nil {
+		return nil, err
+	}
+	return publicKey, err
+}
+
+func ParsePublicPrivateKey() (*rsa.PrivateKey, *rsa.PublicKey, error) {
+	pub, err := RestorePublicKey()
+	if err != nil {
+		return nil, nil, err
+	}
+	pri, err := RestorePrivateKey()
+	if err != nil {
+		return nil, nil, err
+	}
+	return pri, pub, err
+}

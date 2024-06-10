@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"go.uber.org/zap"
 )
 
 func CreateHs256Token() (string, error) {
@@ -27,12 +28,15 @@ func CreateHs256Token() (string, error) {
 
 }
 func GetTokenV1(c *gin.Context) {
+
 	token, err := CreateHs256Token()
 	if err != nil {
 		fmt.Println("Error:", err)
 		c.JSON(400, gin.H{"message": "Unable to generate token"})
 		return
 	}
+	logger.Error("TokenError:",
+		zap.String("msg", err.Error()))
 	c.JSON(200, gin.H{"token": token})
 	return
 

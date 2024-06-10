@@ -3,6 +3,7 @@ package restrouters
 import (
 	utils "Pay-AI/financial-transaction-server/Utils"
 	authmech "Pay-AI/financial-transaction-server/restrouters/AuthMech"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,8 +11,11 @@ import (
 var logger = utils.Logger
 
 func Handler() {
+
 	r := gin.Default()
+	r.Use(log.Logger)
 	r.Use(authmech.LoggingMiddleware())
+	r.Use(authmech.RecoveryMiddleware())
 	t2 := r.Group("/v1/token")
 	{
 		t2.POST("/", authmech.GetTokenV1)
@@ -22,7 +26,7 @@ func Handler() {
 		t.POST("/", authmech.GenerateToken)
 
 	}
-	r.Use(authmech.Middleware())
+	r.Use(authmech.AuthenticationMiddleware())
 
 	p := r.Group("/ping")
 	{

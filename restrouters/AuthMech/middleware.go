@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Middleware() gin.HandlerFunc {
+func AuthenticationMiddleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -28,6 +28,13 @@ func Middleware() gin.HandlerFunc {
 		}
 		c.AbortWithStatusJSON(401, gin.H{"message": "Unauthorize"})
 		return
+
+	}
+
+}
+
+func CompressResponseV1(c *gin.Context, response interface{}) {
+	if c.Header("Accept", "*/*") == true {
 
 	}
 

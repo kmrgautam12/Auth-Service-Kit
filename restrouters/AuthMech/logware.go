@@ -2,6 +2,7 @@ package authmech
 
 import (
 	utils "Pay-AI/financial-transaction-server/Utils"
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -27,4 +28,21 @@ func LoggingMiddleware() gin.HandlerFunc {
 
 	}
 
+}
+
+func RecoveryMiddleware() gin.HandlerFunc {
+
+	return func(ctx *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				logger.Error("Panic:",
+					zap.String(
+						"RecoveryMiddlewareError", fmt.Sprint(err),
+					))
+				ctx.AbortWithStatusJSON(500, gin.H{"message": "Internal Server Error"})
+				return
+			}
+		}()
+		ctx.Next()
+	}
 }

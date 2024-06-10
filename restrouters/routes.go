@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Handler() {
+var logger = utils.Logger
 
+func Handler() {
 	r := gin.Default()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	r.Use(authmech.LoggingMiddleware())
 	t2 := r.Group("/v1/token")
 	{
 		t2.POST("/", authmech.GetTokenV1)

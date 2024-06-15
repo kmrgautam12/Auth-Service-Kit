@@ -32,10 +32,3 @@ func AuthenticationMiddleware() gin.HandlerFunc {
 	}
 
 }
-
-func CompressResponseV1(c *gin.Context, response interface{}) {
-	if c.Header("Accept", "*/*") == true {
-
-	}
-
-}
